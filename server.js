@@ -4,11 +4,12 @@ import { PORT } from "./src/constants/constant.js";
 import connectDb from "./src/db/db.js";
 import Product from "./src/models/product.model.js";
 
-await connectDb();
 dotenv.config();
+await connectDb();
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({extended:false})) // this is used for to decode formdata
 
 app.get("/", (req, res) => {
   res.send("Hi from the server");
@@ -18,6 +19,8 @@ app.get("/", (req, res) => {
 app.post("/api/products", async (req, res) => {
   try {
     const { name, quantity, price, image } = await req.body;
+
+    console.log(req.body);
 
     if (!name || !quantity || !price || !image) {
       return res.status(404).json({ message: "All feilds are necessary" });
@@ -48,7 +51,6 @@ app.post("/api/products", async (req, res) => {
 app.get("/api/products", async (req, res) => {
   try {
     const Products = await Product.find();
-    // const data = Products.json();
     return res.status(201).json({
       message: "data received sucessfully",
       Products,
@@ -62,6 +64,7 @@ app.get("/api/products", async (req, res) => {
 app.get("/api/products/:id", async (req, res) => {
   try {
     const id = req.params.id;
+    console.log(req.params);
 
     const data = await Product.findById(id);
 
@@ -85,8 +88,6 @@ app.put("/api/products/:id", async (req, res) => {
 
     const id = req.params.id;
 
-    // const UpdateProduct = await Product.findById(id);
-
     if (!id) return res.status(404).json({ message: "Id not found" });
 
     const updatedData = await Product.findByIdAndUpdate(id, {
@@ -95,6 +96,8 @@ app.put("/api/products/:id", async (req, res) => {
       price: price,
       image: image,
     });
+
+    // console.log(updatedData);
 
     const newData = await Product.findById(id);
 
@@ -115,7 +118,7 @@ app.delete("/api/products/:id", async (req, res) => {
 
     return res
       .status(201)
-      .json({ message: "item deleted sucessfully", product });
+      .json({ message: "product deleted sucessfully", product });
   } catch (error) {
     console.log(error);
     return res.status(501).json({ message: "server error check console" });
