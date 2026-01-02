@@ -1,7 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
 import { PORT } from "./src/constants/constant.js";
+import connectDb from "./src/db/db.js";
 
+await connectDb();
 dotenv.config();
 const app = express();
 
