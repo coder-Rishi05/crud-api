@@ -40,7 +40,27 @@ app.post("/api/products", async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(400).json({ message: "server error" });
+    res.status(501).json({ message: "server error" });
+    console.log(error);
+  }
+});
+
+app.get("/api/products", async (req, res) => {
+  try {
+    //   const { name, quantity, price, image } = await req.body;
+
+    //   if (!name || !quantity || !price || !image) {
+    //     return res.status(404).json({ message: "All feilds are necessary" });
+    //   }
+
+    const Products = await Product.find();
+    // const data = Products.json();
+    return res.status(201).json({
+      message: "data received sucessfully",
+      Products,
+    });
+  } catch (error) {
+    res.status(501).json({ message: "server error" });
     console.log(error);
   }
 });
