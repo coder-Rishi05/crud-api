@@ -76,7 +76,51 @@ app.get("/api/products/:id", async (req, res) => {
   }
 });
 
-// app.put("/api/products")
+app.put("/api/products/:id", async (req, res) => {
+  try {
+    const { name, quantity, price, image } = await req.body;
+
+    if (!name || !quantity || !price || !image)
+      return res.status(403).json({ message: "All feilds are necessary" });
+
+    const id = req.params.id;
+
+    // const UpdateProduct = await Product.findById(id);
+
+    if (!id) return res.status(404).json({ message: "Id not found" });
+
+    const updatedData = await Product.findByIdAndUpdate(id, {
+      name: name,
+      quantity: quantity,
+      price: price,
+      image: image,
+    });
+
+    const newData = await Product.findById(id);
+
+    return res
+      .status(201)
+      .json({ message: "data updated sucessfully", newData });
+  } catch (error) {
+    return res.status(501).json({ message: "Server error" });
+  }
+});
+
+app.delete("/api/products/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    if (!id) return res.status(404).json({ message: "item not found" });
+    const product = await Product.findByIdAndDelete(id);
+
+    return res
+      .status(201)
+      .json({ message: "item deleted sucessfully", product });
+  } catch (error) {
+    console.log(error);
+    return res.status(501).json({ message: "server error check console" });
+  }
+});
 
 app.listen(process.env.PORT || PORT, () => {
   console.log(`Serevr running at port : ${process.env.PORT || PORT} `);
