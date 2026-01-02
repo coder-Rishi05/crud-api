@@ -47,12 +47,6 @@ app.post("/api/products", async (req, res) => {
 
 app.get("/api/products", async (req, res) => {
   try {
-    //   const { name, quantity, price, image } = await req.body;
-
-    //   if (!name || !quantity || !price || !image) {
-    //     return res.status(404).json({ message: "All feilds are necessary" });
-    //   }
-
     const Products = await Product.find();
     // const data = Products.json();
     return res.status(201).json({
@@ -64,6 +58,25 @@ app.get("/api/products", async (req, res) => {
     console.log(error);
   }
 });
+
+app.get("/api/products/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const data = await Product.findById(id);
+
+    if (!data) return res.status(404).json({ message: "product not found" });
+    return res.status(201).json({
+      message: "item found sucessfully",
+      data,
+    });
+  } catch (error) {
+    res.status(501).json({ message: "server error" });
+    console.log(error);
+  }
+});
+
+// app.put("/api/products")
 
 app.listen(process.env.PORT || PORT, () => {
   console.log(`Serevr running at port : ${process.env.PORT || PORT} `);
