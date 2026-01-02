@@ -3,18 +3,21 @@ import dotenv from "dotenv";
 import { PORT } from "./src/constants/constant.js";
 import connectDb from "./src/db/db.js";
 import Product from "./src/models/product.model.js";
+import router from "./src/routes/product.route.js";
 
 dotenv.config();
 await connectDb();
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({extended:false})) // this is used for to decode formdata
+app.use(express.urlencoded({ extended: false })); // this is used for to decode formdata
 
-app.get("/", (req, res) => {
-  res.send("Hi from the server");
-  console.log("Hi from the server");
-});
+// app.get("/", (req, res) => {
+//   res.send("Hi from the server");
+//   console.log("Hi from the server");
+// });
+
+app.use("/", router);
 
 app.post("/api/products", async (req, res) => {
   try {
