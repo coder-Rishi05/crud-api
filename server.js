@@ -18,115 +18,116 @@ app.use(express.urlencoded({ extended: false })); // this is used for to decode 
 // });
 
 app.use("/", router);
+app.use("/api", router);
 
-app.post("/api/products", async (req, res) => {
-  try {
-    const { name, quantity, price, image } = await req.body;
+// app.post("/api/products", async (req, res) => {
+//   try {
+//     const { name, quantity, price, image } = await req.body;
 
-    console.log(req.body);
+//     console.log("req body : ", req.body);
 
-    if (!name || !quantity || !price || !image) {
-      return res.status(404).json({ message: "All feilds are necessary" });
-    }
+//     if (!name || !quantity || !price || !image) {
+//       return res.status(404).json({ message: "All feilds are necessary" });
+//     }
 
-    const createProduct = await Product.create({
-      name,
-      quantity,
-      price,
-      image,
-    });
+//     const createProduct = await Product.create({
+//       name,
+//       quantity,
+//       price,
+//       image,
+//     });
 
-    return res.status(201).json({
-      message: "data received successfully",
-      data: {
-        name: createProduct.name,
-        quantity: createProduct.quantity,
-        price: createProduct.price,
-        image: createProduct.image,
-      },
-    });
-  } catch (error) {
-    res.status(501).json({ message: "server error" });
-    console.log(error);
-  }
-});
+//     return res.status(201).json({
+//       message: "data received successfully",
+//       data: {
+//         name: createProduct.name,
+//         quantity: createProduct.quantity,
+//         price: createProduct.price,
+//         image: createProduct.image,
+//       },
+//     });
+//   } catch (error) {
+//     res.status(501).json({ message: "server error" });
+//     console.log(error);
+//   }
+// });
 
-app.get("/api/products", async (req, res) => {
-  try {
-    const Products = await Product.find();
-    return res.status(201).json({
-      message: "data received sucessfully",
-      Products,
-    });
-  } catch (error) {
-    res.status(501).json({ message: "server error" });
-    console.log(error);
-  }
-});
+// app.get("/api/products", async (req, res) => {
+//   try {
+//     const Products = await Product.find();
+//     return res.status(201).json({
+//       message: "data received sucessfully",
+//       Products,
+//     });
+//   } catch (error) {
+//     res.status(501).json({ message: "server error" });
+//     console.log(error);
+//   }
+// });
 
-app.get("/api/products/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
-    console.log(req.params);
+// app.get("/api/products/:id", async (req, res) => {
+//   try {
+//     const id = req.params.id;
+//     console.log("req.params", req.params);
 
-    const data = await Product.findById(id);
+//     const data = await Product.findById(id);
 
-    if (!data) return res.status(404).json({ message: "product not found" });
-    return res.status(201).json({
-      message: "item found sucessfully",
-      data,
-    });
-  } catch (error) {
-    res.status(501).json({ message: "server error" });
-    console.log(error);
-  }
-});
+//     if (!data) return res.status(404).json({ message: "product not found" });
+//     return res.status(201).json({
+//       message: "item found sucessfully",
+//       data,
+//     });
+//   } catch (error) {
+//     res.status(501).json({ message: "server error" });
+//     console.log(error);
+//   }
+// });
 
-app.put("/api/products/:id", async (req, res) => {
-  try {
-    const { name, quantity, price, image } = await req.body;
+// app.put("/api/products/:id", async (req, res) => {
+//   try {
+//     const { name, quantity, price, image } = await req.body;
 
-    if (!name || !quantity || !price || !image)
-      return res.status(403).json({ message: "All feilds are necessary" });
+//     if (!name || !quantity || !price || !image)
+//       return res.status(403).json({ message: "All feilds are necessary" });
 
-    const id = req.params.id;
+//     const id = req.params.id;
 
-    if (!id) return res.status(404).json({ message: "Id not found" });
+//     if (!id) return res.status(404).json({ message: "Id not found" });
 
-    const updatedData = await Product.findByIdAndUpdate(id, {
-      name: name,
-      quantity: quantity,
-      price: price,
-      image: image,
-    });
+//     const updatedData = await Product.findByIdAndUpdate(id, {
+//       name: name,
+//       quantity: quantity,
+//       price: price,
+//       image: image,
+//     });
 
-    // console.log(updatedData);
+//     // console.log(updatedData);
 
-    const newData = await Product.findById(id);
+//     const newData = await Product.findById(id);
 
-    return res
-      .status(201)
-      .json({ message: "data updated sucessfully", newData });
-  } catch (error) {
-    return res.status(501).json({ message: "Server error" });
-  }
-});
+//     return res
+//       .status(201)
+//       .json({ message: "data updated sucessfully", newData });
+//   } catch (error) {
+//     return res.status(501).json({ message: "Server error" });
+//   }
+// });
 
-app.delete("/api/products/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
+// app.delete("/api/products/:id", async (req, res) => {
+//   try {
+//     const id = req.params.id;
 
-    if (!id) return res.status(404).json({ message: "item not found" });
-    const product = await Product.findByIdAndDelete(id);
+//     if (!id) return res.status(404).json({ message: "item not found" });
+//     const product = await Product.findByIdAndDelete(id);
 
-    return res
-      .status(201)
-      .json({ message: "product deleted sucessfully", product });
-  } catch (error) {
-    console.log(error);
-    return res.status(501).json({ message: "server error check console" });
-  }
-});
+//     return res
+//       .status(201)
+//       .json({ message: "product deleted sucessfully", product });
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(501).json({ message: "server error check console" });
+//   }
+// });
 
 app.listen(process.env.PORT || PORT, () => {
   console.log(`Serevr running at port : ${process.env.PORT || PORT} `);

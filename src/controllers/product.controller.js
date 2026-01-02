@@ -1,119 +1,115 @@
-// import Product from "./src/models/product.model.js";
-
+import Product from "../models/product.model.js";
 
 export const getData = (req, res) => {
   res.send("Hi from the server");
   console.log("Hi from the server");
 };
 
+export const postData = async (req, res) => {
+  try {
+    const { name, quantity, price, image } = await req.body;
 
+    console.log(req.body); // it will contain the data of user which he write in json so we dont need to destructure it.
 
+    if (!name || !quantity || !price || !image) {
+      return res.status(404).json({ message: "All feilds are necessary" });
+    }
 
-// app.post("/api/products", async (req, res) => {
-//   try {
-//     const { name, quantity, price, image } = await req.body;
+    const createProduct = await Product.create({
+      name,
+      quantity,
+      price,
+      image,
+    });
 
-//     console.log(req.body);
+    return res.status(201).json({
+      message: "data received successfully",
+      data: {
+        name: createProduct.name,
+        quantity: createProduct.quantity,
+        price: createProduct.price,
+        image: createProduct.image,
+      },
+    });
+  } catch (error) {
+    res.status(501).json({ message: "server error" });
+    console.log(error);
+  }
+};
 
-//     if (!name || !quantity || !price || !image) {
-//       return res.status(404).json({ message: "All feilds are necessary" });
-//     }
+export const getAllData = async (req, res) => {
+  try {
+    const Products = await Product.find();
+    return res.status(201).json({
+      message: "data received sucessfully",
+      Products,
+    });
+  } catch (error) {
+    res.status(501).json({ message: "server error" });
+    console.log(error);
+  }
+};
 
-//     const createProduct = await Product.create({
-//       name,
-//       quantity,
-//       price,
-//       image,
-//     });
+export const getItembyId = async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.dir(req.params);
 
-//     return res.status(201).json({
-//       message: "data received successfully",
-//       data: {
-//         name: createProduct.name,
-//         quantity: createProduct.quantity,
-//         price: createProduct.price,
-//         image: createProduct.image,
-//       },
-//     });
-//   } catch (error) {
-//     res.status(501).json({ message: "server error" });
-//     console.log(error);
-//   }
-// });
+    const data = await Product.findById(id);
 
-// app.get("/api/products", async (req, res) => {
-//   try {
-//     const Products = await Product.find();
-//     return res.status(201).json({
-//       message: "data received sucessfully",
-//       Products,
-//     });
-//   } catch (error) {
-//     res.status(501).json({ message: "server error" });
-//     console.log(error);
-//   }
-// });
+    if (!data) return res.status(404).json({ message: "product not found" });
+    return res.status(201).json({
+      message: "item found sucessfully",
+      data,
+    });
+  } catch (error) {
+    res.status(501).json({ message: "server error" });
+    console.log(error);
+  }
+};
 
-// app.get("/api/products/:id", async (req, res) => {
-//   try {
-//     const id = req.params.id;
-//     console.log(req.params);
+export const updateItembyId = async (req, res) => {
+  try {
+    const { name, quantity, price, image } = await req.body;
 
-//     const data = await Product.findById(id);
+    if (!name || !quantity || !price || !image)
+      return res.status(403).json({ message: "All feilds are necessary" });
 
-//     if (!data) return res.status(404).json({ message: "product not found" });
-//     return res.status(201).json({
-//       message: "item found sucessfully",
-//       data,
-//     });
-//   } catch (error) {
-//     res.status(501).json({ message: "server error" });
-//     console.log(error);
-//   }
-// });
+    const id = req.params.id;
 
-// app.put("/api/products/:id", async (req, res) => {
-//   try {
-//     const { name, quantity, price, image } = await req.body;
+    if (!id) return res.status(404).json({ message: "Id not found" });
 
-//     if (!name || !quantity || !price || !image)
-//       return res.status(403).json({ message: "All feilds are necessary" });
+    const updatedData = await Product.findByIdAndUpdate(id, {
+      name: name,
+      quantity: quantity,
+      price: price,
+      image: image,
+    });
 
-//     const id = req.params.id;
+    // console.log(updatedData);
 
-//     if (!id) return res.status(404).json({ message: "Id not found" });
+    const newData = await Product.findById(id);
 
-//     const updatedData = await Product.findByIdAndUpdate(id, {
-//       name: name,
-//       quantity: quantity,
-//       price: price,
-//       image: image,
-//     });
+    return res
+      .status(201)
+      .json({ message: "data updated sucessfully", newData });
+  } catch (error) {
+    return res.status(501).json({ message: "Server error" });
+  }
+};
 
-//     // console.log(updatedData);
+export const deleteItem = async (req, res) => {
+  try {
+    const id = req.params.id;
 
-//     const newData = await Product.findById(id);
+    if (!id) return res.status(404).json({ message: "item not found" });
+    const product = await Product.findByIdAndDelete(id);
 
-//     return res
-//       .status(201)
-//       .json({ message: "data updated sucessfully", newData });
-//   } catch (error) {
-//     return res.status(501).json({ message: "Server error" });
-//   }
-// });
-
-// app.delete("/api/products/:id", async (req, res) => {
-//   try {
-//     const id = req.params.id;
-
-//     if (!id) return res.status(404).json({ message: "item not found" });
-//     const product = await Product.findByIdAndDelete(id);
-
-//     return res
-//       .status(201)
-//       .json({ message: "product deleted sucessfully", product });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(501).json({ message: "server error check console" });
-//   }
-// });
+    return res
+      .status(201)
+      .json({ message: "product deleted sucessfully", product });
+  } catch (error) {
+    console.log(error);
+    return res.status(501).json({ message: "server error check console" });
+  }
+};
