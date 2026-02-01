@@ -11,7 +11,7 @@ const router = Router();
 
 // Home route
 router.route("/").get(getData);
-
+  
 // post data
 
 router.route("/products").post(postData);

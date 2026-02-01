@@ -70,9 +70,9 @@ export const getItembyId = async (req, res) => {
 
 export const updateItembyId = async (req, res) => {
   try {
-    const { name, quantity, price, image } = await req.body;
+    const { name, quantity, price } = await req.body;
 
-    if (!name || !quantity || !price || !image)
+    if (!name || !quantity || !price )
       return res.status(403).json({ message: "All feilds are necessary" });
 
     const id = req.params.id;
@@ -83,7 +83,6 @@ export const updateItembyId = async (req, res) => {
       name: name,
       quantity: quantity,
       price: price,
-      image: image,
     });
 
     // console.log(updatedData);
