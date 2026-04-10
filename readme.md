@@ -25,30 +25,22 @@ A simple CRUD REST API built using Node.js, Express, and MongoDB to practice bac
 
 ### 🚀 Features
 
+```
 - Create a product
-
 - Get all products
-
 - Get product by ID
-
 - Update product by ID
-
 - Delete product by ID
+```
 
 ### 🧠 Concepts Used
 
 - Node.js & Express
-
 - RESTful API architecture
-
 - Express routing & controllers
-
 - MongoDB with Mongoose
-
 - Environment variables using dotenv
-
 - Async/await & error handling
-
 - Clean folder structure
 
 ### run locally
